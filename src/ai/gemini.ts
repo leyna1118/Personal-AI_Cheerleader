@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
-import { AIProvider } from './provider';
+import { AIProvider } from './provider.js';
 
 export class GeminiProvider implements AIProvider {
   private model: GenerativeModel;

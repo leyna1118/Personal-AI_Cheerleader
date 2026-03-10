@@ -1,8 +1,8 @@
 import * as core from '@actions/core';
 import * as github from '@actions/github';
-import { GeminiProvider } from './ai/gemini';
-import { GitHubProvider } from './platform/github';
-import { buildPrompt, CheerStyle } from './prompt';
+import { GeminiProvider } from './ai/gemini.js';
+import { GitHubProvider } from './platform/github.js';
+import { buildPrompt, CheerStyle } from './prompt.js';
 
 export async function run(): Promise<void> {
   try {

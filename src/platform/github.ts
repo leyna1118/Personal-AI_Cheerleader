@@ -1,5 +1,5 @@
 import { GitHub } from '@actions/github/lib/utils';
-import { PlatformProvider } from './provider';
+import { PlatformProvider } from './provider.js';
 
 export interface GitHubContext {
   owner: string;
@@ -23,7 +23,7 @@ export class GitHubProvider implements PlatformProvider {
       });
 
       return files
-        .map((file) => `### ${file.filename}\n${file.patch ?? '(binary or too large)'}`)
+        .map((file: { filename: string; patch?: string }) => `### ${file.filename}\n${file.patch ?? '(binary or too large)'}`)
         .join('\n\n');
     } catch (error) {
       throw new Error(`Failed to fetch PR diff: ${error instanceof Error ? error.message : error}`);

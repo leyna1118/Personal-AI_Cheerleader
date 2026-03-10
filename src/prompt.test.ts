@@ -24,6 +24,10 @@ describe('buildPrompt', () => {
     expect(prompt).toContain(diff);
   });
 
+  it('should throw on invalid style', () => {
+    expect(() => buildPrompt({ diff: 'x', description: 'y', style: 'invalid' as CheerStyle, language: 'en' })).toThrow('Unknown cheer style');
+  });
+
   it('should truncate long diffs', () => {
     const longDiff = 'a'.repeat(30000);
     const prompt = buildPrompt({ diff: longDiff, description, style: 'enthusiastic', language: 'zh-TW' });

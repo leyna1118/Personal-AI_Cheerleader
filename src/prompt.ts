@@ -18,6 +18,10 @@ interface PromptInput {
 export function buildPrompt(input: PromptInput): string {
   const { diff, description, style, language } = input;
 
+  if (!(style in STYLE_PROMPTS)) {
+    throw new Error(`Unknown cheer style: ${style}`);
+  }
+
   let truncatedDiff = diff;
   let truncationNote = '';
   if (diff.length > MAX_DIFF_LENGTH) {

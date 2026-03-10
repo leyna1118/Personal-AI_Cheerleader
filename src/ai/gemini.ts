@@ -1,8 +1,8 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
 import { AIProvider } from './provider';
 
 export class GeminiProvider implements AIProvider {
-  private model;
+  private model: GenerativeModel;
 
   constructor(apiKey: string) {
     if (!apiKey) {
@@ -13,7 +13,11 @@ export class GeminiProvider implements AIProvider {
   }
 
   async generateCheer(prompt: string): Promise<string> {
-    const result = await this.model.generateContent(prompt);
-    return result.response.text();
+    try {
+      const result = await this.model.generateContent(prompt);
+      return result.response.text();
+    } catch (error) {
+      throw new Error(`Gemini API call failed: ${error instanceof Error ? error.message : error}`);
+    }
   }
 }

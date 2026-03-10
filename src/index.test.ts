@@ -14,17 +14,22 @@ vi.mock('@actions/github', () => ({
   },
 }));
 
+const mockPostComment = vi.fn().mockResolvedValue(undefined);
+const mockGetDiff = vi.fn().mockResolvedValue('+ new code');
+const mockGetPRDescription = vi.fn().mockResolvedValue('Added feature');
+const mockGenerateCheer = vi.fn().mockResolvedValue('You are awesome!');
+
 vi.mock('./ai/gemini', () => ({
   GeminiProvider: class {
-    generateCheer = vi.fn().mockResolvedValue('You are awesome!');
+    generateCheer = mockGenerateCheer;
   },
 }));
 
 vi.mock('./platform/github', () => ({
   GitHubProvider: class {
-    getDiff = vi.fn().mockResolvedValue('+ new code');
-    getPRDescription = vi.fn().mockResolvedValue('Added feature');
-    postComment = vi.fn().mockResolvedValue(undefined);
+    getDiff = mockGetDiff;
+    getPRDescription = mockGetPRDescription;
+    postComment = mockPostComment;
   },
 }));
 
@@ -47,6 +52,8 @@ describe('run', () => {
   it('should complete the full flow without errors', async () => {
     await run();
     expect(core.setFailed).not.toHaveBeenCalled();
+    expect(mockPostComment).toHaveBeenCalledWith(expect.stringContaining('AICheerleader'));
+    expect(mockGenerateCheer).toHaveBeenCalled();
   });
 
   it('should fail if no PR context', async () => {

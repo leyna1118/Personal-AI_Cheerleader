@@ -13,7 +13,13 @@ export async function run(): Promise<void> {
     }
 
     const apiKey = core.getInput('ai-api-key', { required: true });
-    const style = (core.getInput('style') || 'enthusiastic') as CheerStyle;
+    const validStyles = ['enthusiastic', 'warm', 'auto'];
+    const styleInput = core.getInput('style') || 'enthusiastic';
+    if (!validStyles.includes(styleInput)) {
+      core.setFailed(`Invalid style "${styleInput}". Must be one of: ${validStyles.join(', ')}`);
+      return;
+    }
+    const style = styleInput as CheerStyle;
     const language = core.getInput('language') || 'zh-TW';
 
     const token = process.env.GITHUB_TOKEN || core.getInput('github-token');

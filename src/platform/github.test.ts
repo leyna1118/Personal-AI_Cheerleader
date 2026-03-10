@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { GitHubProvider } from './github';
 
 const mockListFiles = vi.fn().mockResolvedValue({
@@ -24,6 +24,10 @@ const mockOctokit = {
 describe('GitHubProvider', () => {
   const context = { owner: 'test-owner', repo: 'test-repo', pullNumber: 1 };
 
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it('should get PR diff from file patches', async () => {
     const provider = new GitHubProvider(mockOctokit as any, context);
     const diff = await provider.getDiff();
@@ -33,6 +37,7 @@ describe('GitHubProvider', () => {
       owner: 'test-owner',
       repo: 'test-repo',
       pull_number: 1,
+      per_page: 100,
     });
   });
 

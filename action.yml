@@ -1,0 +1,17 @@
+name: 'AICheerleader'
+description: 'AI-powered cheerleader that analyzes PR diffs and gives warm compliments to developers'
+inputs:
+  ai-api-key:
+    description: 'API key for the AI provider (Gemini)'
+    required: true
+  style:
+    description: 'Cheer style: enthusiastic, warm, or auto'
+    required: false
+    default: 'enthusiastic'
+  language:
+    description: 'Language for the compliment (e.g., zh-TW, en, ja)'
+    required: false
+    default: 'zh-TW'
+runs:
+  using: 'node20'
+  main: 'dist/index.js'

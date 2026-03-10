@@ -1,0 +1,20 @@
+name: AICheerleader
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  cheer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./
+        with:
+          ai-api-key: ${{ secrets.GEMINI_API_KEY }}
+          style: enthusiastic
+          language: zh-TW
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

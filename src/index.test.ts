@@ -1,5 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
+const mockCheerleader = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
+
 vi.mock('@actions/core', () => ({
   getInput: vi.fn(),
   setFailed: vi.fn(),
@@ -14,23 +16,16 @@ vi.mock('@actions/github', () => ({
   },
 }));
 
-const mockPostComment = vi.fn().mockResolvedValue(undefined);
-const mockGetDiff = vi.fn().mockResolvedValue('+ new code');
-const mockGetPRDescription = vi.fn().mockResolvedValue('Added feature');
-const mockGenerateCheer = vi.fn().mockResolvedValue('You are awesome!');
-
 vi.mock('./ai/gemini', () => ({
-  GeminiProvider: class {
-    generateCheer = mockGenerateCheer;
-  },
+  GeminiProvider: vi.fn().mockImplementation(function () { return {}; }),
 }));
 
 vi.mock('./platform/github', () => ({
-  GitHubProvider: class {
-    getDiff = mockGetDiff;
-    getPRDescription = mockGetPRDescription;
-    postComment = mockPostComment;
-  },
+  GitHubProvider: vi.fn().mockImplementation(function () { return {}; }),
+}));
+
+vi.mock('./core', () => ({
+  cheerleader: mockCheerleader,
 }));
 
 import * as core from '@actions/core';
@@ -49,11 +44,15 @@ describe('run', () => {
     });
   });
 
-  it('should complete the full flow without errors', async () => {
+  it('should delegate to cheerleader() with correct config', async () => {
     await run();
     expect(core.setFailed).not.toHaveBeenCalled();
-    expect(mockPostComment).toHaveBeenCalledWith(expect.stringContaining('AICheerleader'));
-    expect(mockGenerateCheer).toHaveBeenCalled();
+    expect(mockCheerleader).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      { style: 'enthusiastic', language: 'zh-TW' },
+      core.info
+    );
   });
 
   it('should fail if no PR context', async () => {
@@ -65,5 +64,19 @@ describe('run', () => {
     );
     // restore
     vi.mocked(github.context).payload = { pull_request: { number: 42 } };
+  });
+
+  it('should fail on invalid style', async () => {
+    vi.mocked(core.getInput).mockImplementation((name: string) => {
+      const inputs: Record<string, string> = {
+        'ai-api-key': 'fake-key',
+        style: 'invalid',
+      };
+      return inputs[name] ?? '';
+    });
+    await run();
+    expect(core.setFailed).toHaveBeenCalledWith(
+      expect.stringContaining('Invalid style')
+    );
   });
 });

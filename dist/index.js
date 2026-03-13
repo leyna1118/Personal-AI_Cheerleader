@@ -37696,6 +37696,26 @@ ${sanitizedDiff}${truncationNote}
 </user_code_diff>`;
 }
 //# sourceMappingURL=prompt.js.map
+;// CONCATENATED MODULE: ./lib/core.js
+
+async function cheerleader(platform, ai, config, log = console.log) {
+    log('Fetching PR diff and description...');
+    const diff = await platform.getDiff();
+    if (!diff) {
+        log('No diff found, skipping.');
+        return;
+    }
+    const description = await platform.getPRDescription();
+    log(`Building prompt with style: ${config.style}, language: ${config.language}`);
+    const prompt = buildPrompt({ diff, description, style: config.style, language: config.language });
+    log('Generating cheer with AI...');
+    const cheer = await ai.generateCheer(prompt);
+    const comment = `## 📣 AICheerleader\n\n${cheer}`;
+    log('Posting comment...');
+    await platform.postComment(comment);
+    log('Cheer posted successfully!');
+}
+//# sourceMappingURL=core.js.map
 ;// CONCATENATED MODULE: ./lib/index.js
 
 
@@ -37724,21 +37744,7 @@ async function run() {
         const pullNumber = pullRequest.number;
         const platform = new GitHubProvider(octokit, { owner, repo, pullNumber });
         const ai = new GeminiProvider(apiKey);
-        info('Fetching PR diff and description...');
-        const diff = await platform.getDiff();
-        if (!diff) {
-            info('No diff found, skipping.');
-            return;
-        }
-        const description = await platform.getPRDescription();
-        info(`Building prompt with style: ${style}, language: ${language}`);
-        const prompt = buildPrompt({ diff, description, style, language });
-        info('Generating cheer with AI...');
-        const cheer = await ai.generateCheer(prompt);
-        const comment = `## 📣 AICheerleader\n\n${cheer}`;
-        info('Posting comment...');
-        await platform.postComment(comment);
-        info('Cheer posted successfully!');
+        await cheerleader(platform, ai, { style, language }, info);
     }
     catch (error) {
         if (error instanceof Error) {

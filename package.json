@@ -4,6 +4,12 @@
   "description": "",
   "type": "module",
   "main": "index.js",
+  "bin": {
+    "aicheerleader": "./lib/cli.js"
+  },
+  "files": [
+    "lib/"
+  ],
   "directories": {
     "doc": "docs"
   },

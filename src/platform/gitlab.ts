@@ -33,7 +33,7 @@ export class GitLabProvider implements PlatformProvider {
 
   async getDiff(): Promise<string> {
     const res = await this.request(`/merge_requests/${this.context.mrIid}/diffs?per_page=100`);
-    const diffs: Array<{ new_path: string; diff: string | null }> = await res.json();
+    const diffs = (await res.json()) as Array<{ new_path: string; diff: string | null }>;
     return diffs
       .map((file) => `### ${file.new_path}\n${file.diff ?? '(binary or too large)'}`)
       .join('\n\n');
@@ -41,7 +41,7 @@ export class GitLabProvider implements PlatformProvider {
 
   async getPRDescription(): Promise<string> {
     const res = await this.request(`/merge_requests/${this.context.mrIid}`);
-    const data = await res.json();
+    const data = (await res.json()) as { description?: string };
     return data.description ?? '';
   }
 

@@ -2,7 +2,8 @@ import * as core from '@actions/core';
 import * as github from '@actions/github';
 import { GeminiProvider } from './ai/gemini.js';
 import { GitHubProvider } from './platform/github.js';
-import { buildPrompt, CheerStyle } from './prompt.js';
+import { cheerleader } from './core.js';
+import { CheerStyle } from './prompt.js';
 
 export async function run(): Promise<void> {
   try {
@@ -30,28 +31,7 @@ export async function run(): Promise<void> {
     const platform = new GitHubProvider(octokit, { owner, repo, pullNumber });
     const ai = new GeminiProvider(apiKey);
 
-    core.info('Fetching PR diff and description...');
-    const diff = await platform.getDiff();
-
-    if (!diff) {
-      core.info('No diff found, skipping.');
-      return;
-    }
-
-    const description = await platform.getPRDescription();
-
-    core.info(`Building prompt with style: ${style}, language: ${language}`);
-    const prompt = buildPrompt({ diff, description, style, language });
-
-    core.info('Generating cheer with AI...');
-    const cheer = await ai.generateCheer(prompt);
-
-    const comment = `## 📣 AICheerleader\n\n${cheer}`;
-
-    core.info('Posting comment...');
-    await platform.postComment(comment);
-
-    core.info('Cheer posted successfully!');
+    await cheerleader(platform, ai, { style, language }, core.info);
   } catch (error) {
     if (error instanceof Error) {
       core.setFailed(error.message);

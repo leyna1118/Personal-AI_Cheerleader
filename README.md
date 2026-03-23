@@ -73,6 +73,7 @@ Then add two CI/CD variables in **Settings → CI/CD → Variables**:
 | Input | Required | Default | Description |
 |---|---|---|---|
 | `ai-api-key` | Yes | — | Google Gemini API key |
+| `ai-model` | No | `gemini-2.5-flash` | Gemini model to use |
 | `style` | No | `enthusiastic` | Cheer style (see below) |
 | `language` | No | `zh-TW` | Language for the compliment |
 
@@ -100,6 +101,7 @@ Example with custom style (GitHub):
 |---|---|---|---|
 | `CHEERLEADER_AI_API_KEY` | Yes | — | Google Gemini API key |
 | `GITLAB_TOKEN` | Yes | — | Project/Personal Access Token with `api` scope |
+| `CHEERLEADER_AI_MODEL` | No | `gemini-2.5-flash` | Gemini model to use |
 | `CHEERLEADER_STYLE` | No | `enthusiastic` | Cheer style (see above) |
 | `CHEERLEADER_LANGUAGE` | No | `zh-TW` | Language for the compliment |
 

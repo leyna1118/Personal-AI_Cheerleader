@@ -4,12 +4,12 @@ import { AIProvider } from './provider.js';
 export class GeminiProvider implements AIProvider {
   private model: GenerativeModel;
 
-  constructor(apiKey: string) {
+  constructor(apiKey: string, model = 'gemini-2.5-flash') {
     if (!apiKey) {
       throw new Error('Gemini API key is required');
     }
     const genAI = new GoogleGenerativeAI(apiKey);
-    this.model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+    this.model = genAI.getGenerativeModel({ model });
   }
 
   async generateCheer(prompt: string): Promise<string> {

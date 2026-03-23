@@ -22,6 +22,7 @@ export async function main(): Promise<void> {
   }
 
   const language = process.env.CHEERLEADER_LANGUAGE || 'zh-TW';
+  const aiModel = process.env.CHEERLEADER_AI_MODEL || 'gemini-2.5-flash';
 
   const token = process.env.GITLAB_TOKEN;
   if (!token) {
@@ -41,7 +42,7 @@ export async function main(): Promise<void> {
   const gitlabUrl = process.env.CI_SERVER_URL || 'https://gitlab.com';
 
   const platform = new GitLabProvider(token, { gitlabUrl, projectId, mrIid: Number(mrIid) });
-  const ai = new GeminiProvider(apiKey);
+  const ai = new GeminiProvider(apiKey, aiModel);
 
   await cheerleader(platform, ai, { style, language, platform: 'gitlab' });
 }

@@ -22,6 +22,7 @@ export async function run(): Promise<void> {
     }
     const style = styleInput as CheerStyle;
     const language = core.getInput('language') || 'zh-TW';
+    const aiModel = core.getInput('ai-model') || 'gemini-2.5-flash';
 
     const token = process.env.GITHUB_TOKEN || core.getInput('github-token');
     const octokit = github.getOctokit(token);
@@ -29,7 +30,7 @@ export async function run(): Promise<void> {
     const pullNumber = pullRequest.number;
 
     const platform = new GitHubProvider(octokit, { owner, repo, pullNumber });
-    const ai = new GeminiProvider(apiKey);
+    const ai = new GeminiProvider(apiKey, aiModel);
 
     await cheerleader(platform, ai, { style, language, platform: 'github' }, core.info);
   } catch (error) {

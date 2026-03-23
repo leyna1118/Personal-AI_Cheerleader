@@ -56,6 +56,7 @@ cheerleader:
   variables:
     CHEERLEADER_AI_API_KEY: $AI_API_KEY
     GITLAB_TOKEN: $CHEERLEADER_GITLAB_TOKEN
+  allow_failure: true
   rules:
     - if: $CI_MERGE_REQUEST_IID
 ```

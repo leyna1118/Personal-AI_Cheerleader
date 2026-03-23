@@ -40,7 +40,7 @@ describe('CLI main', () => {
     expect(mockCheerleader).toHaveBeenCalledWith(
       expect.anything(),
       expect.anything(),
-      { style: 'enthusiastic', language: 'zh-TW' }
+      { style: 'enthusiastic', language: 'zh-TW', platform: 'gitlab' }
     );
   });
 
@@ -81,7 +81,7 @@ describe('CLI main', () => {
     expect(mockCheerleader).toHaveBeenCalledWith(
       expect.anything(),
       expect.anything(),
-      { style: 'warm', language: 'en' }
+      { style: 'warm', language: 'en', platform: 'gitlab' }
     );
   });
 

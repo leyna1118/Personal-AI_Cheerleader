@@ -43,7 +43,7 @@ export async function main(): Promise<void> {
   const platform = new GitLabProvider(token, { gitlabUrl, projectId, mrIid: Number(mrIid) });
   const ai = new GeminiProvider(apiKey);
 
-  await cheerleader(platform, ai, { style, language });
+  await cheerleader(platform, ai, { style, language, platform: 'gitlab' });
 }
 
 /* istanbul ignore next -- only runs as CLI entry point */

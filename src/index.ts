@@ -31,7 +31,7 @@ export async function run(): Promise<void> {
     const platform = new GitHubProvider(octokit, { owner, repo, pullNumber });
     const ai = new GeminiProvider(apiKey);
 
-    await cheerleader(platform, ai, { style, language }, core.info);
+    await cheerleader(platform, ai, { style, language, platform: 'github' }, core.info);
   } catch (error) {
     if (error instanceof Error) {
       core.setFailed(error.message);

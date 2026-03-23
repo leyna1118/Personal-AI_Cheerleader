@@ -50,7 +50,7 @@ describe('run', () => {
     expect(mockCheerleader).toHaveBeenCalledWith(
       expect.anything(),
       expect.anything(),
-      { style: 'enthusiastic', language: 'zh-TW' },
+      { style: 'enthusiastic', language: 'zh-TW', platform: 'github' },
       core.info
     );
   });
